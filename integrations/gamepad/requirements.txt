@@ -1,0 +1,2 @@
+# Optional virtual gamepad integration (Windows only)
+vgamepad>=0.1.0

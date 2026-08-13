@@ -1,0 +1,137 @@
+# Configuración de GestureVision
+# Basado en MediaPipe Hands y Red Neuronal
+
+# ==================== CONFIGURACIÓN DE MEDIAPIPE ====================
+MEDIAPIPE:
+  max_num_hands: 2                    # Número máximo de manos a detectar
+  min_detection_confidence: 0.8        # Confianza mínima para detección
+  min_tracking_confidence: 0.8         # Confianza mínima para tracking
+  static_image_mode: false             # Modo video (false) o imagen estática (true)
+  model_complexity: 1                  # 0, 1 o 2 (mayor = más preciso pero más lento)
+
+# ==================== CONFIGURACIÓN DE CÁMARA ====================
+CAMERA:
+  camera_index: 0                      # Índice de la cámara (0=por defecto, 1=NVIDIA Broadcast, etc.)
+  flip_horizontal: true                # Voltear imagen horizontalmente
+  width: 640                           # Ancho de captura (opcional)
+  height: 480                          # Alto de captura (opcional)
+
+# ==================== CONFIGURACIÓN DE PREPROCESAMIENTO ====================
+PREPROCESSING:
+  normalize_to_wrist: true             # Normalizar coordenadas respecto a muñeca
+  use_z_coordinate: false              # Incluir coordenada Z (profundidad)
+  output_csv: "data/datasets/dataset_gestos.csv"  # Ruta del dataset CSV
+
+# ==================== CONFIGURACIÓN DE ENTRENAMIENTO ====================
+TRAINING:
+  # Arquitectura del modelo
+  model_architecture:
+    layers: [512, 256, 182, 64]        # Neuronas por capa oculta
+    dropout_rates: [0.3, 0.3, 0.2, 0.2]  # Tasas de dropout por capa
+    activation: "relu"                 # Función de activación
+  
+  # Hiperparámetros
+  epochs: 1000                        # Número de épocas
+  batch_size: 32                      # Tamaño de batch
+  learning_rate: 0.003                  # Tasa de aprendizaje (Adam)
+  validation_split: 0.3                # Proporción de datos para validación
+  random_state: 42                     # Semilla para reproducibilidad
+  
+  # Configuración de GPU
+  use_gpu: true                        # Usar GPU si está disponible
+  gpu_memory_growth: true              # Crecimiento dinámico de memoria GPU
+  
+  # Rutas de salida
+  model_output: "data/models/modelo_gestos.keras"
+  scaler_output: "data/models/scaler.save"
+  label_encoder_output: "data/models/label_encoder.save"
+  history_plot: "results/training/historial_entrenamiento.png"
+
+# ==================== CONFIGURACIÓN DE INFERENCIA ====================
+INFERENCE:
+  # Rutas de modelos
+  model_path: "data/models/modelo_gestos.keras"
+  scaler_path: "data/models/scaler.save"
+  label_encoder_path: "data/models/label_encoder.save"
+  
+  # Configuración de predicción
+  prediction_threshold: 0.7            # Umbral mínimo de confianza (0.0-1.0). Si la confianza es menor, no se presiona ningún botón
+  smoothing_window: 5                  # Ventana para suavizado de predicciones (0=desactivado)
+
+# ==================== CONFIGURACIÓN DE GAMEPAD ====================
+GAMEPAD:
+  # Mapeo de gestos a botones D-Pad (solo para mano izquierda)
+  gesture_to_dpad:
+    "up": "XUSB_GAMEPAD_DPAD_UP"
+    "down": "XUSB_GAMEPAD_DPAD_DOWN"
+    "left": "XUSB_GAMEPAD_DPAD_LEFT"
+    "right": "XUSB_GAMEPAD_DPAD_RIGHT"
+    "upleft": "XUSB_GAMEPAD_DPAD_UP,XUSB_GAMEPAD_DPAD_LEFT"  # Diagonal
+    "upright": "XUSB_GAMEPAD_DPAD_UP,XUSB_GAMEPAD_DPAD_RIGHT"  # Diagonal
+    "downleft": "XUSB_GAMEPAD_DPAD_DOWN,XUSB_GAMEPAD_DPAD_LEFT"  # Diagonal
+    "downright": "XUSB_GAMEPAD_DPAD_DOWN,XUSB_GAMEPAD_DPAD_RIGHT"  # Diagonal
+    # "neutro": null  # OPCIONAL - solo si entrenaste el modelo con gesto "neutro"
+  
+  # Mapeo de gestos a botones A/B/X/Y (solo para mano derecha)
+  gesture_to_action_buttons:
+    "X": "XUSB_GAMEPAD_X"
+    "A": "XUSB_GAMEPAD_A"
+    "Y": "XUSB_GAMEPAD_Y"
+    "B": "XUSB_GAMEPAD_B"
+  
+  # Mapeo de gestos a botones de hombro (LB para izquierda, RB para derecha)
+  gesture_to_shoulder_buttons:
+    "LB": "XUSB_GAMEPAD_LEFT_SHOULDER"      # Solo mano izquierda
+    "RB": "XUSB_GAMEPAD_RIGHT_SHOULDER"     # Solo mano derecha
+  
+  # Mapeo de gestos a gatillos (LT para izquierda, RT para derecha)
+  gesture_to_triggers:
+    "RT": "right_trigger"              # Gatillo derecho (solo mano derecha)
+    "LT": "left_trigger"              # Gatillo izquierdo (solo mano izquierda)
+  
+  # Configuración de gatillos
+  trigger_value: 255                   # Valor cuando está activo (0-255)
+  
+  # Mapeo fijo por mano
+  hand_mapping:
+    left_hand:
+      controls: ["dpad", "LB", "LT"]   # Mano izquierda controla D-Pad, LB y LT
+    right_hand:
+      controls: ["A", "B", "X", "Y", "RB", "RT"]  # Mano derecha controla botones de acción y RB, RT
+
+# ==================== CONFIGURACIÓN DE VISUALIZACIÓN ====================
+VISUALIZATION:
+  show_landmarks: true                 # Mostrar landmarks de MediaPipe
+  show_connections: true               # Mostrar conexiones entre landmarks
+  show_gesture_label: true             # Mostrar etiqueta del gesto detectado
+  show_confidence: false               # Mostrar confianza de la predicción
+  window_title: "Detección de Gestos - Gamepad Virtual"
+
+# ==================== CONFIGURACIÓN DE GESTOS ====================
+# Definición de teclas para captura de gestos durante creación de dataset
+GESTURE_CAPTURE:
+  # D-Pad
+  up: "w"
+  down: "s"
+  left: "a"
+  right: "d"
+  upleft: "q"
+  upright: "e"
+  downleft: "z"
+  downright: "x"
+  
+  # Botones
+  X: "f"
+  A: "g"
+  Y: "h"
+  B: "j"
+  LB: "k"
+  LT: "l"
+  RB: "n"
+  RT: "m"
+  
+  # Neutro (OPCIONAL - solo si quieres entrenar explícitamente el modelo para reconocer "mano presente sin gesto")
+  # neutro: "o"  # Descomenta si quieres capturar muestras de "neutro"
+  
+  # Tecla para salir
+  exit: "ESC"

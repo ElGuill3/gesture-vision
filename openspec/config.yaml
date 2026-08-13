@@ -1,0 +1,43 @@
+schema: spec-driven
+
+context: |
+  Project: GestureVision, a Python computer-vision gesture classifier with an optional virtual Xbox 360 gamepad integration.
+  Stack: OpenCV, MediaPipe Hands, TensorFlow/Keras, scikit-learn, pandas, joblib, PyYAML; optional vgamepad integration.
+  Architecture: configuration-driven sequential scripts for capture, training, and real-time inference, plus optional integrations under integrations/.
+  Runtime: webcam input; Windows is required only for the optional vgamepad integration.
+  Testing: no test runner or test suite detected; compileall is the only verified static smoke check.
+  Style: procedural Python scripts, Spanish user-facing messages, YAML paths relative to the working directory.
+
+strict_tdd: false
+
+testing:
+  runner: null
+  command: null
+  unit: false
+  integration: false
+  e2e: false
+  coverage: false
+  linter: null
+  type_checker: null
+  formatter: null
+
+rules:
+  proposal:
+    - Include a rollback plan for changes affecting model artifacts, input mappings, or gamepad safety.
+  specs:
+    - Use Given/When/Then scenarios and RFC 2119 keywords.
+  design:
+    - Document runtime-platform constraints and safety behavior for releasing controls.
+  tasks:
+    - Group tasks by pipeline stage and keep each task independently verifiable.
+  apply:
+    guidelines:
+      - Preserve configuration compatibility and avoid loading hardware during importable tests.
+    tdd: false
+    test_command: null
+  verify:
+    test_command: null
+    build_command: "python -m compileall -q ."
+    coverage_threshold: 0
+  archive:
+    - Warn before merging changes that alter gesture labels or persisted model formats.

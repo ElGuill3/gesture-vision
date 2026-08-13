@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Generated datasets and models
+data/datasets/
+data/models/
+
+# Resultados
+results/**/*.png
+results/**/*.csv
+results/**/*.pkl
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Agent tooling
+.atl/
+
+
