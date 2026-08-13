@@ -43,5 +43,6 @@ desktop.ini
 
 # Agent tooling
 .atl/
+.codegraph/
 
 
