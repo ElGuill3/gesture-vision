@@ -5,15 +5,15 @@ context: |
   Stack: OpenCV, MediaPipe Hands, TensorFlow/Keras, scikit-learn, pandas, joblib, PyYAML; optional vgamepad integration.
   Architecture: configuration-driven sequential scripts for capture, training, and real-time inference, plus optional integrations under integrations/.
   Runtime: webcam input; Windows is required only for the optional vgamepad integration.
-  Testing: no test runner or test suite detected; compileall is the only verified static smoke check.
+  Testing: Python standard-library unittest safe-import regression test; compileall is the verified static smoke check.
   Style: procedural Python scripts, Spanish user-facing messages, YAML paths relative to the working directory.
 
 strict_tdd: false
 
 testing:
-  runner: null
-  command: null
-  unit: false
+  runner: unittest
+  command: "python -m unittest tests.test_safe_imports -v"
+  unit: true
   integration: false
   e2e: false
   coverage: false
@@ -34,9 +34,9 @@ rules:
     guidelines:
       - Preserve configuration compatibility and avoid loading hardware during importable tests.
     tdd: false
-    test_command: null
+    test_command: "python -m unittest tests.test_safe_imports -v"
   verify:
-    test_command: null
+    test_command: "python -m unittest tests.test_safe_imports -v"
     build_command: "python -m compileall -q ."
     coverage_threshold: 0
   archive:
