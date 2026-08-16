@@ -4,7 +4,7 @@ Captura gestos de manos usando MediaPipe y los guarda en un CSV
 """
 
 
-def main():
+def _legacy_main():
     import cv2
     import mediapipe as mp
     import numpy as np
@@ -141,6 +141,19 @@ def main():
             print(f"  {gesture}: {count} muestras")
     else:
         print("\nAdvertencia: No se capturaron muestras. El dataset no se guardó.")
+
+
+def main():
+    """Delegate the legacy entrypoint to the capture workflow."""
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "src"))
+    from gesture_vision.config import load_config
+    from gesture_vision.workflows.capture import run
+
+    return run(load_config(root / "config" / "config.yaml"))
 
 
 if __name__ == "__main__":
