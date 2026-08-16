@@ -35,8 +35,8 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 2: Capture Sessions
 
-- [ ] 2.1 (U2) Create UUID4 JSON sessions/capture workflow: per-hand samples, atomic `os.replace`, immutable finalization, no failure file.
-- [ ] 2.2 (U2) Delegate `preprocessing/0_create_dataset.py`; test invalid landmarks, two-hand attribution, and new-session isolation.
+- [x] 2.1 (U2) Create UUID4 JSON sessions/capture workflow: per-hand samples, atomic `os.replace`, immutable finalization, no failure file.
+- [x] 2.2 (U2) Delegate `preprocessing/0_create_dataset.py`; test invalid landmarks, two-hand attribution, and new-session isolation.
 
 ## Phase 3: Grouped Training Foundation
 
