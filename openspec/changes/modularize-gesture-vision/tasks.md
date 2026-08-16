@@ -10,7 +10,7 @@ Chain strategy: stacked-to-main
 400-line budget risk: High
 Delivery strategy: auto-chain
 
-Order `A → B → U1 → U2 → U3 → U4 → U5 → U6 → U7`; stacked-to-main after merge. Planning B/current baseline has U1 unchecked; U1 will add checked markers plus `apply-progress.md`.
+Order `A → B → U1 → U2 → U3 → U4 → U5 → U6 → U7`; stacked-to-main after merge. B U1=[ ]; U1/current U1=[x]+`apply-progress.md`. Reconstruct later; preserve files; no staging.
 
 Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
@@ -30,8 +30,8 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 1: Package and Feature Contract
 
-- [ ] 1.1 (U1) Create lazy CLI/config and `extract_landmark_features` for `mediapipe-xyz-wrist-v1`: 63 finite XYZ-interleaved values; reject invalid/42.
-- [ ] 1.2 (U1) Add defaults, YAML→CLI/rooted paths; test help/safe imports and preserve four wrappers.
+- [x] 1.1 (U1) Create lazy CLI/config and `extract_landmark_features` for `mediapipe-xyz-wrist-v1`: 63 finite XYZ-interleaved values; reject invalid/42.
+- [x] 1.2 (U1) Add defaults, YAML→CLI/rooted paths; test help/safe imports and preserve four wrappers.
 
 ## Phase 2: Capture Sessions
 
