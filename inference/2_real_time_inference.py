@@ -5,7 +5,7 @@ Soporta detección de dos manos simultáneas
 """
 
 
-def main():
+def _legacy_main():
     import cv2
     import mediapipe as mp
     import numpy as np
@@ -179,6 +179,19 @@ def main():
         cv2.destroyAllWindows()
         hands.close()
         print("Detección finalizada")
+
+
+def main():
+    """Delegate the legacy entrypoint to validated visual inference."""
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "src"))
+    from gesture_vision.config import load_config
+    from gesture_vision.workflows.inference import run
+
+    return run(load_config(root / "config" / "config.yaml"))
 
 
 if __name__ == "__main__":
