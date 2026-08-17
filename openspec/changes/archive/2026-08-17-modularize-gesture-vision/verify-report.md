@@ -16,9 +16,9 @@ build_output_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca49599
 
 ## Verification Report
 
-**Change**: `modularize-gesture-vision`  
-**Version**: `0.1.0`  
-**Mode**: Standard (Strict TDD disabled)  
+**Change**: `modularize-gesture-vision`
+**Version**: `0.1.0`
+**Mode**: Standard (Strict TDD disabled)
 **Final verdict**: **PASS** with two non-blocking warnings
 
 This is a fresh independent verification of the current candidate after the approved remediation. Historical report `#13461` was not read or reused as current evidence.

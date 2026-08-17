@@ -23,7 +23,7 @@ The final independent verification established:
 | Tests | 26/26 |
 | Blockers | 0 |
 | Critical findings | 0 |
-| Canonical verify report | `sha256:b49f51b95f00b8cb47db80dcb13361d1e3844d650529dee4a57313124a22e70e` |
+| Canonical verify report | `sha256:573936fe869f3969f9631f065b50f999c7d8824bea3f16f92b5251c96509a370` |
 | Verification evidence revision | `sha256:622bf880c537907ba16d0afd0236aede472add8997d3711f13541a1ac9f6cfea` |
 
 The `VISUALIZATION.show_connections` behavior is fixed and covered for false, omitted/default, and true using a fake vision runtime. U1 evidence is corrected to 314 authored changed lines (311 additions, 3 deletions), with forecast totals of 2,448 / 2,475.
