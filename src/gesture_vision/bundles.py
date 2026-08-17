@@ -172,3 +172,12 @@ def rollback_bundle(root, artifact_loader=None):
     restored = {"format_version": 1, "active": selection["previous"], "previous": selection["active"]}
     _atomic_json(root / "selection.json", restored)
     return root / restored["active"]
+
+
+def load_active_bundle(root, artifact_loader=None):
+    """Return the active bundle only after its complete validation."""
+    root = Path(root)
+    active = _selection(root)["active"]
+    if active is None:
+        raise ValueError("No active bundle is selected")
+    return validate_bundle(root / active, artifact_loader, active)

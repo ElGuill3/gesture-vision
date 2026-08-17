@@ -50,8 +50,8 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 5: Shared Visual Recognition
 
-- [ ] 5.1 (U5) Create `recognize_frame`: per-hand smoothing clears on missing/invalid/below-threshold input and emits no stale label.
-- [ ] 5.2 (U5) Update `inference/2_real_time_inference.py`; test attribution, empty next history, and validation before camera open.
+- [x] 5.1 (U5) Create `recognize_frame`: per-hand smoothing clears on missing/invalid/below-threshold input and emits no stale label.
+- [x] 5.2 (U5) Update `inference/2_real_time_inference.py`; test attribution, empty next history, and validation before camera open.
 
 ## Phase 6: Safe Gamepad Control
 
