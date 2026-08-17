@@ -3,7 +3,7 @@ Script 3: Simulación de Gamepad Virtual
 Detecta gestos en tiempo real y los mapea a un gamepad virtual Xbox 360
 Soporta detección de dos manos simultáneas con mapeo fijo por mano
 """
-def main():
+def _legacy_main():
     import cv2
     import mediapipe as mp
     import numpy as np
@@ -391,6 +391,19 @@ def main():
         cv2.destroyAllWindows()
         hands.close()
         print("Simulación finalizada")
+
+
+def main():
+    """Delegate the legacy entrypoint to safe gamepad control."""
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(root / "src"))
+    from gesture_vision.config import load_config
+    from gesture_vision.workflows.gamepad import run
+
+    return run(load_config(root / "config" / "config.yaml"))
 
 
 if __name__ == "__main__":

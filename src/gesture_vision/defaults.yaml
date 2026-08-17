@@ -20,3 +20,20 @@ TRAINING:
   epochs: 100
   batch_size: 32
   learning_rate: 0.003
+GAMEPAD:
+  trigger_value: 255
+  hand_mapping:
+    left_hand: {controls: [dpad, LB, LT]}
+    right_hand: {controls: [A, B, X, Y, RB, RT]}
+  gesture_to_dpad:
+    up: XUSB_GAMEPAD_DPAD_UP
+    down: XUSB_GAMEPAD_DPAD_DOWN
+    left: XUSB_GAMEPAD_DPAD_LEFT
+    right: XUSB_GAMEPAD_DPAD_RIGHT
+    upleft: XUSB_GAMEPAD_DPAD_UP,XUSB_GAMEPAD_DPAD_LEFT
+    upright: XUSB_GAMEPAD_DPAD_UP,XUSB_GAMEPAD_DPAD_RIGHT
+    downleft: XUSB_GAMEPAD_DPAD_DOWN,XUSB_GAMEPAD_DPAD_LEFT
+    downright: XUSB_GAMEPAD_DPAD_DOWN,XUSB_GAMEPAD_DPAD_RIGHT
+  gesture_to_action_buttons: {A: XUSB_GAMEPAD_A, B: XUSB_GAMEPAD_B, X: XUSB_GAMEPAD_X, Y: XUSB_GAMEPAD_Y}
+  gesture_to_shoulder_buttons: {LB: XUSB_GAMEPAD_LEFT_SHOULDER, RB: XUSB_GAMEPAD_RIGHT_SHOULDER}
+  gesture_to_triggers: {LT: left_trigger, RT: right_trigger}
