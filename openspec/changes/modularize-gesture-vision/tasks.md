@@ -55,8 +55,8 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 6: Safe Gamepad Control
 
-- [ ] 6.1 (U6) Add Windows/dependency-gated adapter/workflow honoring `hand_mapping`; idempotent `neutralize` releases every control in-cycle and `finally`.
-- [ ] 6.2 (U6) Update `integrations/gamepad/gamepad_simulation.py`/config; test non-gamepad availability and loss, low-confidence, error, shutdown release.
+- [x] 6.1 (U6) Add Windows/dependency-gated adapter/workflow honoring `hand_mapping`; idempotent `neutralize` releases every control in-cycle and `finally`.
+- [x] 6.2 (U6) Update `integrations/gamepad/gamepad_simulation.py`/config; test non-gamepad availability and loss, low-confidence, error, shutdown release.
 
 ## Phase 7: Documentation and Verification
 
