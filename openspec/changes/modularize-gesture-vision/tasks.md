@@ -40,8 +40,8 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 3: Grouped Training Foundation
 
-- [ ] 3.1 (U3) Add `sessions.partition_sessions`: validate complete/schema-compatible files; seeded, non-empty, disjoint train/validation/test membership.
-- [ ] 3.2 (U3) Test failure before fitter/import and document the session boundary.
+- [x] 3.1 (U3) Add `sessions.partition_sessions`: validate complete/schema-compatible files; seeded, non-empty, disjoint train/validation/test membership.
+- [x] 3.2 (U3) Test failure before fitter/import and document the session boundary.
 
 ## Phase 4: Bundles and Training
 
