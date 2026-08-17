@@ -2,7 +2,7 @@
 
 ## Review Workload Forecast
 
-9 PRs; ~2,452 / ~2,479 snapshot lines (`285/259/318/300/180/330/320/300/160`); ~571 pre-U1; <400 each.
+9 PRs; ~2,448 / ~2,475 snapshot lines (`285/259/314/300/180/330/320/300/160`); ~571 pre-U1; <400 each.
 
 Decision needed before apply: No
 Chained PRs recommended: Yes
@@ -12,7 +12,7 @@ Delivery strategy: auto-chain
 
 Order `A → B → U1 → U2 → U3 → U4 → U5 → U6 → U7`; stacked-to-main after merge. B U1=[ ]; U1/current U1=[x]+`apply-progress.md`. Reconstruct later; preserve files; no staging.
 
-Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
+Review: A/B docs; U1 314 (311 insertions + 3 deletions); U2–U7 160–330; tests/docs together; rollback.
 
 ### Delivery PR Ledger
 
@@ -20,7 +20,7 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 |---|---|---|---|
 | A | `openspec/config.yaml`, exploration/proposal/design; base; 285 | Docs/N/A | A docs |
 | B | Five specs + baseline `tasks.md` (U1 unchecked); A; 259 | Spec/N/A | B specs |
-| U1 | `pyproject.toml`, `src/`, U1 tests, checkbox, `apply-progress.md`; B; 318 | Evidence | U1 files/progress |
+| U1 | `pyproject.toml`, `src/`, U1 tests, checkbox, `apply-progress.md`; B; 314 (311 insertions + 3 deletions) | Evidence | U1 files/progress |
 | U2 | `sessions.py`, capture/vision paths; U1; 300 | `python -m unittest tests.test_capture_sessions -v`; fake JSON | U2; artifacts |
 | U3 | `sessions.partition_sessions`; U2; 180 | `python -m unittest tests.test_grouped_training -v`; seeded split | U3; keep sessions |
 | U4 | Bundles/train paths; U3; 330 | `python -m unittest tests.test_bundles tests.test_train_workflow -v`; fake promotion | U4; selector |
@@ -60,5 +60,5 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 7: Documentation and Verification
 
-- [ ] 7.1 (U7) Rewrite `README.md` for editable install, four commands, 63-feature/session/bundle contracts, wrappers, Windows gamepad, no stale formats.
-- [ ] 7.2 (U7) Run tests, compileall, CWD help, safe-import; verify rollback.
+- [x] 7.1 (U7) Rewrite `README.md` for editable install, four commands, 63-feature/session/bundle contracts, wrappers, Windows gamepad, no stale formats.
+- [x] 7.2 (U7) Run tests, compileall, CWD help, safe-import; verify rollback.
