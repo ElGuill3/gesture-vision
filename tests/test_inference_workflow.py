@@ -83,6 +83,59 @@ class InferenceWorkflowTests(unittest.TestCase):
                 run(self.config(root), artifact_loader=lambda *_: (type("BrokenModel", (), {"input_shape": (None, 42), "output_shape": (None, 2)})(), Scaler()), camera_factory=camera)
             self.assertEqual(opened, [])
 
+    def test_connection_visibility_uses_only_fake_vision_runtime(self):
+        class Capture:
+            def read(self):
+                return True, object()
+
+            def set(self, *_):
+                pass
+
+            def release(self):
+                pass
+
+        hand = SimpleNamespace(landmark=landmarks())
+        side = SimpleNamespace(classification=[SimpleNamespace(label="Left")])
+
+        class Hands:
+            def __init__(self, **_):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_):
+                pass
+
+            def process(self, _):
+                return SimpleNamespace(multi_hand_landmarks=[hand], multi_handedness=[side])
+
+        connections, drawn = object(), []
+        drawing = SimpleNamespace(DrawingSpec=lambda **values: values, draw_landmarks=lambda _, __, value, *___: drawn.append(value))
+        fake_mp = SimpleNamespace(solutions=SimpleNamespace(hands=SimpleNamespace(Hands=Hands, HAND_CONNECTIONS=connections), drawing_utils=drawing))
+        fake_cv2 = SimpleNamespace(CAP_PROP_FRAME_WIDTH=1, CAP_PROP_FRAME_HEIGHT=2, COLOR_BGR2RGB=3, cvtColor=lambda frame, _: frame, imshow=lambda *_: None, waitKey=lambda _: 27, destroyAllWindows=lambda: None, VideoCapture=lambda *_: self.fail("real camera path used"))
+        original_import = builtins.__import__
+
+        def fake_import(name, *args, **kwargs):
+            if name == "cv2":
+                return fake_cv2
+            if name == "mediapipe":
+                return fake_mp
+            if name.partition(".")[0] in {"tensorflow", "joblib"}:
+                self.fail(f"fake visualization imported {name}")
+            return original_import(name, *args, **kwargs)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.bundle(root)
+            config = {**self.config(root), "CAMERA": {"camera_index": 0}, "MEDIAPIPE": {"max_num_hands": 2, "min_detection_confidence": 0.5, "min_tracking_confidence": 0.5}}
+            for name, visualization, expected in (("false", {"show_connections": False}, None), ("default", {}, connections), ("true", {"show_connections": True}, connections)):
+                with self.subTest(name=name), patch("builtins.__import__", side_effect=fake_import):
+                    drawn.clear()
+                    config["VISUALIZATION"] = {**visualization, "show_gesture_label": False}
+                    run(config, artifact_loader=loader, camera_factory=lambda _: Capture())
+                    self.assertIs(drawn[-1], expected)
+
     def test_legacy_inference_wrapper_delegates(self):
         wrapper = Path(__file__).resolve().parents[1] / "inference" / "2_real_time_inference.py"
         namespace = runpy.run_path(wrapper, run_name="legacy_inference")

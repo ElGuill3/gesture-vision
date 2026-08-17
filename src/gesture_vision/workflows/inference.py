@@ -40,7 +40,7 @@ def _live_run(config, model, scaler, decoder, histories, camera_factory=None):
                 if visualization.get("show_landmarks", True):
                     for landmarks, side in pairs:
                         color = (0, 255, 0) if side.classification[0].label.lower() == "left" else (255, 0, 255)
-                        mp.solutions.drawing_utils.draw_landmarks(frame, landmarks, mp_hands.HAND_CONNECTIONS, mp.solutions.drawing_utils.DrawingSpec(color=color, thickness=2, circle_radius=2), mp.solutions.drawing_utils.DrawingSpec(color=color, thickness=2))
+                        mp.solutions.drawing_utils.draw_landmarks(frame, landmarks, mp_hands.HAND_CONNECTIONS if visualization.get("show_connections", True) else None, mp.solutions.drawing_utils.DrawingSpec(color=color, thickness=2, circle_radius=2), mp.solutions.drawing_utils.DrawingSpec(color=color, thickness=2))
                 if visualization.get("show_gesture_label", True):
                     for y, hand, prefix, color in ((30, "left", "Izq", (0, 255, 0)), (65, "right", "Der", (255, 0, 255))):
                         label, confidence = outcomes[hand]
