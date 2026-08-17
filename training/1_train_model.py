@@ -3,6 +3,15 @@ Script 1: Entrenamiento del Modelo de Red Neuronal
 Entrena un modelo de clasificación de gestos usando TensorFlow/Keras
 """
 def main():
+    import sys
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "src"))
+    from gesture_vision.config import load_config
+    from gesture_vision.workflows.train import run
+    print("ENTRENAMIENTO DEL MODELO DE GESTOS")
+    return run(load_config(root / "config" / "config.yaml"))
+
     import pandas as pd
     import numpy as np
     from sklearn.model_selection import train_test_split

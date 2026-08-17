@@ -14,3 +14,9 @@ INFERENCE:
 FEATURES:
   schema: mediapipe-xyz-wrist-v1
   dimension: 63
+TRAINING:
+  split_seed: 42
+  hidden_units: 128
+  epochs: 100
+  batch_size: 32
+  learning_rate: 0.003
