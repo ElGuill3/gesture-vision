@@ -45,8 +45,8 @@ Review: A/B docs; U1 318; U2–U7 160–330; tests/docs together; rollback.
 
 ## Phase 4: Bundles and Training
 
-- [ ] 4.1 (U4) Add bundle manifest/hash/schema/dimension validation, staged reload, atomic active/previous promotion, and rollback; leave legacy 42 artifacts.
-- [ ] 4.2 (U4) Add lazy ML/train workflow; update `training/1_train_model.py`/config; test fail-before-fit and unchanged selections.
+- [x] 4.1 (U4) Add bundle manifest/hash/schema/dimension validation, staged reload, atomic active/previous promotion, and rollback; leave legacy 42 artifacts.
+- [x] 4.2 (U4) Add lazy ML/train workflow; update `training/1_train_model.py`/config; test fail-before-fit and unchanged selections.
 
 ## Phase 5: Shared Visual Recognition
 
