@@ -1,270 +1,87 @@
-# GestureVision
+# GestureVision CLI workflow
 
-Sistema de detección y clasificación de gestos de manos en tiempo real usando MediaPipe Hands y redes neuronales, con una integración opcional para mapearlos a un gamepad virtual Xbox 360.
+Capture hand gestures, train a validated local bundle, then run visual inference or optional virtual-gamepad control.
 
-## 📋 Descripción
+## Install
 
-Este proyecto permite detectar y clasificar gestos de manos capturados por una cámara web. Utiliza:
-- **MediaPipe Hands** para la detección de landmarks de la mano
-- **Red Neuronal (TensorFlow/Keras)** para la clasificación de gestos
-- **vgamepad** para la integración opcional con un gamepad Xbox 360
-
-## 🏗️ Estructura del Proyecto
-
-```
-gesture-vision/
-├── config/
-│   └── config.yaml              # Configuración principal del sistema
-├── preprocessing/
-│   └── 0_create_dataset.py      # Script para crear el dataset de gestos
-├── training/
-│   └── 1_train_model.py         # Script para entrenar el modelo
-├── inference/
-│   └── 2_real_time_inference.py # Script de inferencia en tiempo real
-├── integrations/
-│   └── gamepad/
-│       ├── gamepad_simulation.py # Integración opcional con gamepad
-│       └── requirements.txt      # Dependencia opcional de vgamepad
-├── data/
-│   ├── datasets/                 # Datasets CSV
-│   └── models/                   # Modelos entrenados, scalers, encoders
-├── results/
-│   └── training/                 # Resultados de entrenamiento (gráficas)
-├── utils/                        # Utilidades compartidas (futuro)
-├── requirements.txt              # Dependencias del proyecto
-└── README.md                     # Este archivo
-```
-
-## 🚀 Instalación
-
-### Requisitos Previos
-
-- Python 3.8 o superior
-- Cámara web
-- Windows 10/11 (solo para la integración opcional con vgamepad)
-
-### Pasos de Instalación
-
-1. **Clonar o descargar el proyecto**
-
-2. **Crear un entorno virtual (recomendado)**
-```bash
-python -m venv venv
-venv\Scripts\activate  # Windows
-```
-
-3. **Instalar dependencias**
-```bash
-pip install -r requirements.txt
-```
-
-Para usar la integración opcional con gamepad:
-```bash
-pip install -r integrations/gamepad/requirements.txt
-```
-
-4. **Configurar el archivo de configuración**
-   - Edita `config/config.yaml` según tus necesidades
-   - Ajusta el índice de cámara si usas NVIDIA Broadcast u otra cámara virtual
-
-## 📖 Uso
-
-### Flujo de Trabajo Completo
-
-#### 1. Crear Dataset de Gestos
-
-Ejecuta el script de preprocesamiento para capturar gestos:
+The package declares Python 3.11+. The lightweight CLI install includes its configuration dependency; live camera and training workflows also need the packages in `requirements.txt`. Use a Python and platform supported by those heavy dependency wheels.
 
 ```bash
-python preprocessing/0_create_dataset.py
+python -m venv .venv
+# Activate .venv for your shell.
+python -m pip install -e .
+python -m pip install -r requirements.txt  # required for capture, train, and infer runtimes
 ```
 
-**Instrucciones:**
-- Presiona las teclas correspondientes mientras haces el gesto
-- Las teclas están mapeadas en `config/config.yaml` bajo `GESTURE_CAPTURE`
-- Presiona ESC para finalizar la captura
-- El dataset se guardará en `data/datasets/dataset_gestos.csv`
-
-**Teclas por defecto:**
-- **D-Pad**: W (arriba), S (abajo), A (izquierda), D (derecha)
-- **Diagonales**: Q (arriba-izquierda), E (arriba-derecha), Z (abajo-izquierda), X (abajo-derecha)
-- **Botones**: F (X), G (A), H (Y), J (B), K (LB), L (LT), N (RB), M (RT)
-- **Neutro**: O (opcional - ver nota abajo)
-
-**Nota sobre el gesto "neutro":**
-El gesto "neutro" es **opcional**. El sistema automáticamente no presiona ningún botón cuando:
-- No se detecta ninguna mano
-- La confianza de la predicción es menor al umbral configurado (`prediction_threshold` en `config.yaml`)
-
-Solo necesitas entrenar un gesto "neutro" si quieres que el modelo aprenda explícitamente a reconocer "mano presente pero sin gesto específico". Para la mayoría de casos, no es necesario.
-
-#### 2. Entrenar el Modelo
-
-Una vez que tengas suficientes muestras (recomendado: 100+ por gesto), entrena el modelo:
+The gamepad workflow is optional and Windows-only. On Windows, install its extra and the ViGEmBus driver required by the virtual Xbox controller stack before using it:
 
 ```bash
-python training/1_train_model.py
+python -m pip install -e ".[gamepad]"
 ```
 
-**Configuración:**
-- Edita `config/config.yaml` bajo `TRAINING` para ajustar hiperparámetros
-- El modelo se guardará en `data/models/modelo_gestos.h5`
-- Se generarán gráficas de entrenamiento en `results/training/`
-
-#### 3. Inferencia en Tiempo Real (Solo Visualización)
-
-Para probar la detección sin gamepad:
+## Discover the CLI
 
 ```bash
-python inference/2_real_time_inference.py
+gesture-vision --help
+gesture-vision capture --help
+gesture-vision train --help
+gesture-vision infer --help
+gesture-vision gamepad --help
 ```
 
-#### 4. Simulación de Gamepad
+Help and package imports do not open a camera, load MediaPipe or TensorFlow, or create a gamepad. The four commands are `capture`, `train`, `infer`, and `gamepad`.
 
-Para usar el gamepad virtual:
+## Configure paths and camera
+
+Configuration precedence is: packaged defaults, then an optional YAML file supplied with `--config`, then explicit CLI values such as `--camera-index`. `--root` selects `PATHS.root`; relative paths in `PATHS` resolve beneath it.
 
 ```bash
-python integrations/gamepad/gamepad_simulation.py
+gesture-vision capture --config config/config.yaml --camera-index 1 --root .
 ```
 
-**Nota:** Requiere permisos de administrador en Windows para crear el gamepad virtual.
+Use `config/config.yaml` as the repository overlay, or supply your own YAML overlay. Set `PATHS.sessions` and `PATHS.bundles` there when the defaults do not match your workspace.
 
-## ⚙️ Configuración
+## Capture, train, then run
 
-### Archivo de Configuración (`config/config.yaml`)
+1. **Capture sessions** — this needs a camera, OpenCV, and MediaPipe. Press a configured `GESTURE_CAPTURE` key while a hand is visible; press Escape to finish.
 
-El archivo YAML contiene todas las configuraciones del sistema:
+   ```bash
+   gesture-vision capture --config config/config.yaml --root .
+   ```
 
-#### MediaPipe
-- `max_num_hands`: Número máximo de manos a detectar
-- `min_detection_confidence`: Confianza mínima para detección
-- `min_tracking_confidence`: Confianza mínima para tracking
-- `model_complexity`: Complejidad del modelo (0, 1, 2)
+   A non-empty run writes one immutable JSON session under `PATHS.sessions`. Every accepted hand becomes a separately attributed sample with the `mediapipe-xyz-wrist-v1` contract: 63 finite, wrist-relative XYZ values. Do not train the new workflow from legacy 42-feature CSV or model artifacts.
 
-#### Cámara
-- `camera_index`: Índice de la cámara (0=por defecto, 1=NVIDIA Broadcast, etc.)
-- `flip_horizontal`: Voltear imagen horizontalmente
+2. **Train a bundle** — this needs the ML packages, including TensorFlow, scikit-learn, and joblib.
 
-#### Entrenamiento
-- `epochs`: Número de épocas
-- `batch_size`: Tamaño de batch
-- `learning_rate`: Tasa de aprendizaje
-- `layers`: Arquitectura de la red neuronal
+   ```bash
+   gesture-vision train --config config/config.yaml --root .
+   ```
 
-#### Gamepad
-- `gesture_to_dpad`: Mapeo de gestos a botones D-Pad
-- `gesture_to_buttons`: Mapeo de gestos a botones A/B/X/Y/RB/LB
-- `gesture_to_triggers`: Mapeo de gestos a gatillos RT/LT
+   Training validates complete compatible sessions before fitting, keeps each session wholly in train, validation, or test, and requires enough sessions for all three groups. It stages a validated bundle in `PATHS.bundles`; the selector retains active and immediate previous bundle IDs for rollback.
 
-## 🎮 Gestos Soportados
+3. **Run visual inference** — this needs an active validated bundle plus the camera/vision runtime.
 
-### D-Pad (Direcciones)
-- `up`, `down`, `left`, `right`
-- `upleft`, `upright`, `downleft`, `downright` (diagonales)
+   ```bash
+   gesture-vision infer --config config/config.yaml --root .
+   ```
 
-### Estado Neutro
-- **Automático**: El sistema no presiona ningún botón cuando no hay mano detectada o la confianza es baja
-- **Opcional**: Puedes entrenar un gesto `neutro` explícito si lo deseas (ver configuración)
+   The workflow validates the selected bundle before opening the camera and clears a hand's smoothed label when that hand is absent or below the configured confidence threshold.
 
-### Botones
-- `A`, `B`, `X`, `Y`
-- `LB` (Left Bumper), `RB` (Right Bumper)
+4. **Run optional gamepad control** — Windows, `vgamepad`, ViGEmBus, an active bundle, and the live camera runtime are required.
 
-### Gatillos
-- `RT` (Right Trigger), `LT` (Left Trigger)
+   ```bash
+   gesture-vision gamepad --config config/config.yaml --root .
+   ```
 
-## 🔧 Resolución de Problemas
+   The command fails before device creation on a non-Windows host or when the optional dependency is missing. It neutralizes supported controls on signal loss, low confidence, errors, and shutdown.
 
-### Error: "No se encontró el dataset"
-- Asegúrate de ejecutar primero `preprocessing/0_create_dataset.py`
-- Verifica que el archivo existe en `data/datasets/dataset_gestos.csv`
+## Migration wrappers
 
-### Error: "No se encontraron los archivos del modelo"
-- Ejecuta primero `training/1_train_model.py`
-- Verifica que los archivos existen en `data/models/`
+These existing entry points remain callable and delegate to the matching modular workflow:
 
-### Error al usar vgamepad
-- Ejecuta el script como administrador
-- Verifica que vgamepad esté instalado correctamente: `pip install vgamepad`
+- `preprocessing/0_create_dataset.py` → `capture`
+- `training/1_train_model.py` → `train`
+- `inference/2_real_time_inference.py` → `infer`
+- `integrations/gamepad/gamepad_simulation.py` → `gamepad`
 
-### Cámara no detecta
-- Verifica el índice de cámara en `config/config.yaml`
-- Para NVIDIA Broadcast, usa `camera_index: 1` o prueba otros índices
-- Lista cámaras disponibles ejecutando:
-```python
-import cv2
-for i in range(10):
-    cap = cv2.VideoCapture(i)
-    if cap.isOpened():
-        print(f"Cámara {i}: Disponible")
-        cap.release()
-```
-
-### Baja precisión del modelo
-- Aumenta el número de muestras por gesto (recomendado: 200+)
-- Ajusta hiperparámetros en `config/config.yaml`
-- Aumenta el número de épocas de entrenamiento
-- Verifica que los gestos sean consistentes durante la captura
-
-## 📊 Mejores Prácticas
-
-### Captura de Dataset
-- Captura múltiples muestras de cada gesto (100-200 mínimo)
-- Varía ligeramente la posición y orientación de la mano
-- Asegúrate de tener buena iluminación
-- Mantén la mano visible y completa en el frame
-
-### Entrenamiento
-- Divide el dataset en entrenamiento/validación (configurado automáticamente)
-- Monitorea las gráficas de pérdida y precisión
-- Si hay sobreajuste, aumenta el dropout o reduce la complejidad del modelo
-
-### Inferencia
-- Usa buena iluminación para mejor detección
-- Mantén la mano a una distancia cómoda de la cámara
-- Activa el suavizado de predicciones en la configuración para reducir fluctuaciones
-
-## 🛠️ Desarrollo Futuro
-
-- [ ] Soporte para múltiples manos simultáneas
-- [ ] Detección de gestos dinámicos (movimientos)
-- [ ] Interfaz gráfica para configuración
-- [ ] Exportación de modelos a formato optimizado
-- [ ] Soporte para otros tipos de gamepads
-
-## 📝 Notas
-
-- El proyecto está basado en la estructura del proyecto [shazam-v2](https://github.com/Julio-Schez/shazam-v2.git)
-- Requiere Windows para vgamepad (no compatible con Linux/Mac directamente)
-- Para mejor rendimiento, usa GPU con TensorFlow
-
-## 📁 Archivos Antiguos
-
-Los siguientes archivos en la raíz del proyecto son versiones antiguas y pueden ser eliminados:
-- `hand_create_csv.py` → Reemplazado por `preprocessing/0_create_dataset.py`
-- `model_training.py` → Reemplazado por `training/1_train_model.py`
-- `real_time_inference.py` → Reemplazado por `inference/2_real_time_inference.py`
-- `gamepad_simulation.py` → Reemplazado por `integrations/gamepad/gamepad_simulation.py`
-- `hand_detection.py` → Script de prueba, puede mantenerse o eliminarse
-- `cam_verify.py`, `hitbox_emulation.py` → Scripts auxiliares, pueden mantenerse
-
-## 🔍 Utilidades
-
-### Listar Cámaras Disponibles
-
-Para encontrar el índice de tu cámara (útil para NVIDIA Broadcast):
-
-```bash
-python utils/list_cameras.py
-```
-
-Esto mostrará todas las cámaras disponibles y sus índices.
-
-## 📄 Licencia
-
-Este proyecto está optimizado para uso educativo y personal.
-
----
-
-**Última actualización:** Noviembre 2025
-
+They are migration paths; use `gesture-vision` for new runs.
